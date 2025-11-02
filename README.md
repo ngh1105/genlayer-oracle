@@ -89,6 +89,9 @@ python scripts/oracle_client.py 0xe0E45EC84BB780BB1cccAc1B0CB09E507eF37147
 
 # Read from Simple Price Feed
 python scripts/oracle_client.py 0xe328378CAF086ae0a6458395C9919a4137fCb888
+
+# Update Simple Price Feed (write transaction)
+python scripts/oracle_client.py 0xe328378CAF086ae0a6458395C9919a4137fCb888 update
 ```
 
 **3. Build Node.js demo:**
