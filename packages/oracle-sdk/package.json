@@ -1,0 +1,23 @@
+{
+  "name": "@genlayer/oracle-sdk",
+  "version": "1.0.0",
+  "description": "TypeScript SDK for interacting with GenLayer oracle contracts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "genlayer-js": "^0.18.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.5",
+    "typescript": "^5.6.2"
+  },
+  "peerDependencies": {
+    "genlayer-js": "^0.18.2"
+  }
+}
+
