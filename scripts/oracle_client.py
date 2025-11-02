@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Note: This script requires Python 3.12+ (genlayer-py requirement)
+# On Windows, recommended: py -3.12 scripts/oracle_client.py
+# Python 3.14 may have dependency build issues (ckzg needs Visual Studio Build Tools)
 """
 GenLayer Oracle Client - Python
 
@@ -193,7 +196,8 @@ def detect_contract_type(client, address: str) -> Optional[str]:
             args=[],
         )
         return "oracle"
-    except:
+    except Exception as e:
+        # If error, try next method
         pass
     
     # Try Simple Price Feed (has get_price)
@@ -204,7 +208,8 @@ def detect_contract_type(client, address: str) -> Optional[str]:
             args=[],
         )
         return "simple"
-    except:
+    except Exception as e:
+        # If both fail, return None
         pass
     
     return None
@@ -217,8 +222,8 @@ def main():
     
     # Create account and client
     account = create_account()
-    # Note: According to genlayer-py docs, account is passed to write_contract, not create_client
-    client = create_client(chain=CHAIN)
+    # Note: genlayer-py requires account in create_client for read_contract
+    client = create_client(chain=CHAIN, account=account)
     
     print("\n=== GenLayer Oracle Client (Python) ===")
     print(f"Chain: {CHAIN.name if hasattr(CHAIN, 'name') else 'Unknown'}")

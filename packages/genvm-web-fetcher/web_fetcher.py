@@ -1,10 +1,10 @@
+# { "Depends": "py-genlayer:latest" }
 """
 GenVM Web Fetcher Library
 
 A reusable library for fetching data from external APIs in GenVM Python contracts.
 Provides error handling, multi-source fallback, and common patterns.
 
-# { "Depends": "py-genlayer:latest" }
 """
 import json
 import genlayer.gl as gl
