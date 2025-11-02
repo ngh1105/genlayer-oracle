@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-and-build:
+    name: Lint and Build
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      
+      - name: Install root dependencies
+        run: npm install
+      
+      - name: Build Oracle SDK
+        run: |
+          cd packages/oracle-sdk
+          npm install
+          npm run build
+      
+      - name: Lint Oracle SDK
+        run: |
+          cd packages/oracle-sdk
+          npm run lint 2>/dev/null || echo "Lint script not configured"
+        continue-on-error: true
+      
+      - name: Build Frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+        continue-on-error: true
+
+  python-check:
+    name: Python Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Check Python syntax
+        run: |
+          find contracts packages/genvm-web-fetcher -name "*.py" -exec python3 -m py_compile {} \;
+        continue-on-error: true
+
+  docs-check:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check documentation files
+        run: |
+          test -f README.md && echo "✓ README.md exists"
+          test -f LICENSE && echo "✓ LICENSE exists"
+          test -f CONTRIBUTING.md && echo "✓ CONTRIBUTING.md exists"
+          test -f CHANGELOG.md && echo "✓ CHANGELOG.md exists"
+

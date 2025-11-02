@@ -1,5 +1,10 @@
 # GenLayer Oracle - Tools & Infrastructure
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![GenLayer](https://img.shields.io/badge/GenLayer-Studionet-blue)](https://genlayer.com)
+
 This project provides **reusable tools and libraries** for building GenLayer applications, plus **research contributions** for protocol improvements.
 
 **Focus Areas**:
@@ -13,7 +18,8 @@ This repository contains:
 1. **Reference Oracle Contract** (`contracts/`) - Complete oracle implementation
 2. **GenVM Web Fetcher Library** (`packages/genvm-web-fetcher/`) - Reusable web fetching utilities
 3. **Oracle SDK** (`packages/oracle-sdk/`) - TypeScript SDK for oracle interactions
-4. **Research Plans** (`docs/RESEARCH_PLAN.md`) - Performance benchmarks, security analysis, protocol proposals
+4. **API Key Management Patterns** (`docs/API_KEY_MANAGEMENT_PATTERNS.md`) - Secure API key handling patterns
+5. **Research Plans** (`docs/RESEARCH_PLAN.md`) - Performance benchmarks, security analysis, protocol proposals
 
 ## 🏗️ Architecture
 
@@ -124,3 +130,18 @@ Deploy `contracts/oracle_consumer.py` to GenLayer network.
 - Contract state persists on-chain after successful `update_all()` calls
 - Non-deterministic execution requires validator consensus
 - All float values are encoded as strings for calldata compatibility
+
+## 📚 Additional Resources
+
+- [API Key Management Patterns](docs/API_KEY_MANAGEMENT_PATTERNS.md) - Secure patterns for handling API keys
+- [Contribution Guidelines](CONTRIBUTING.md) - How to contribute to this project
+- [Changelog](CHANGELOG.md) - Version history and changes
+- [Research Plans](docs/RESEARCH_PLAN.md) - Performance and security research
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
