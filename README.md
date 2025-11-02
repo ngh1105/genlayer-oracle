@@ -1,15 +1,11 @@
-# GenLayer Oracle - Tools & Infrastructure
+# GenLayer Oracle
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![GenLayer](https://img.shields.io/badge/GenLayer-Studionet-blue)](https://genlayer.com)
 
-This project provides **reusable tools and libraries** for building GenLayer applications, focusing on **Tools & Infrastructure** and **Research & Analysis**.
-
-**Focus Areas**:
-- 🛠️ **Tools & Infrastructure**: Reusable libraries for GenVM contracts
-- 🔬 **Research & Analysis**: Performance benchmarks, security audits, protocol proposals
+This project provides **reusable tools and libraries** for building GenLayer oracle applications.
 
 ## What's Inside
 
@@ -26,7 +22,7 @@ This repository contains:
 
 ```
 genlayer-oracle/
-├── packages/                    # Reusable Tools & Libraries
+├── packages/                    # Libraries
 │   ├── genvm-web-fetcher/      # Python library for web fetching
 │   │   ├── web_fetcher.py      # Core WebFetcher class
 │   │   └── DEPLOY_READY/       # Production-ready examples
@@ -52,9 +48,7 @@ genlayer-oracle/
 │   └── index.ts                # TypeScript client demo
 │
 └── docs/                        # Documentation
-    ├── API_KEY_MANAGEMENT_PATTERNS.md
-    ├── RESEARCH_PLAN.md
-    └── TOOLS_IMPLEMENTATION_PLAN.md
+    └── API_KEY_MANAGEMENT_PATTERNS.md
 ```
 
 ## ✅ Deployed Contracts
@@ -261,13 +255,7 @@ Off-chain Python script using genlayer-py SDK.
 ## 📚 Additional Resources
 
 - [API Key Management Patterns](docs/API_KEY_MANAGEMENT_PATTERNS.md) - Secure patterns for handling API keys
-- [Research Plan](docs/RESEARCH_PLAN.md) - Performance and security research
-- [Contribution Guidelines](CONTRIBUTING.md) - How to contribute to this project
 - [Changelog](CHANGELOG.md) - Version history and changes
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
