@@ -56,7 +56,7 @@ genlayer-oracle/
 
 ### Prerequisites
 - Node.js 18+
-- Python 3.x (for GenVM contract development)
+- Python 3.9+ (for GenVM contract development and scripts)
 - GenLayer runtime/network access
 
 ### Installation
@@ -64,6 +64,9 @@ genlayer-oracle/
 ```bash
 # Install root dependencies
 npm install
+
+# Install Python dependencies (for off-chain scripts)
+pip install -r requirements.txt
 
 # Install frontend dependencies (if using frontend)
 cd frontend && npm install
@@ -79,13 +82,22 @@ cd packages/oracle-sdk && npm install
 npm run dev
 ```
 
-**2. Build Node.js demo:**
+**2. Run Python client (interact with contracts):**
+```bash
+# Read from Oracle Consumer
+python scripts/oracle_client.py 0xe0E45EC84BB780BB1cccAc1B0CB09E507eF37147
+
+# Read from Simple Price Feed
+python scripts/oracle_client.py 0xe328378CAF086ae0a6458395C9919a4137fCb888
+```
+
+**3. Build Node.js demo:**
 ```bash
 npm run build
 npm start
 ```
 
-**3. Run Frontend dApp:**
+**4. Run Frontend dApp:**
 ```bash
 cd frontend
 npm run dev

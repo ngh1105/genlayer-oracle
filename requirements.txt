@@ -1,0 +1,11 @@
+# Python dependencies for GenLayer Oracle project
+
+# GenLayer Python SDK
+genlayer-py>=0.1.0
+
+# Optional: For API key encryption (if using encrypted on-chain pattern)
+cryptography>=41.0.0
+
+# Optional: For additional utilities
+requests>=2.31.0
+
