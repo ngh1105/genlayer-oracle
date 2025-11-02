@@ -20,6 +20,8 @@ yarn add @genlayer/oracle-sdk
 
 ## Quick Start
 
+### Oracle Consumer (Full Oracle)
+
 ```typescript
 import { OracleSDK } from '@genlayer/oracle-sdk';
 import { createClient, createAccount } from 'genlayer-js';
@@ -31,7 +33,7 @@ const client = createClient({ chain: studionet, account });
 
 // Create Oracle SDK instance
 const oracle = new OracleSDK({
-  contractAddress: '0x...',
+  contractAddress: '0xe0E45EC84BB780BB1cccAc1B0CB09E507eF37147', // Deployed Oracle Consumer
   chain: studionet,
   client: client
 });
@@ -39,10 +41,48 @@ const oracle = new OracleSDK({
 // Get current status
 const status = await oracle.getStatus();
 console.log('ETH Price:', status.price.eth_usd);
+console.log('Weather:', status.weather.temperature, '°C');
+console.log('News:', status.news.count);
+
+// Update oracle
+const txHash = await oracle.updateOracle({ city: 'Hanoi' });
+await oracle.waitForFinalization(txHash);
 
 // Subscribe to updates
 oracle.onUpdate((data) => {
   console.log('Oracle updated:', data);
+});
+```
+
+### Simple Price Feed
+
+```typescript
+import { SimplePriceFeedSDK } from '@genlayer/oracle-sdk';
+import { createClient, createAccount } from 'genlayer-js';
+import { studionet } from 'genlayer-js/chains';
+
+// Setup
+const account = createAccount();
+const client = createClient({ chain: studionet, account });
+
+// Create Simple Price Feed SDK
+const priceSDK = new SimplePriceFeedSDK({
+  contractAddress: '0xe328378CAF086ae0a6458395C9919a4137fCb888', // Deployed Simple Price Feed
+  chain: studionet,
+  client: client
+});
+
+// Get current price
+const price = await priceSDK.getPrice();
+console.log(`ETH Price: $${price.price} (${price.source})`);
+
+// Update price and wait
+const newPrice = await priceSDK.updatePriceAndWait();
+console.log(`Updated Price: $${newPrice.price}`);
+
+// Subscribe to price updates
+priceSDK.onUpdate((data) => {
+  console.log(`Price updated: $${data.price}`);
 });
 ```
 
@@ -67,10 +107,27 @@ new OracleSDK(options: {
 - `getStatus(): Promise<OracleStatus>` - Get current oracle status
 - `getPrice(symbol?: string): Promise<number>` - Get price for symbol (default: ETH)
 - `getWeather(): Promise<WeatherData>` - Get weather data
-- `getNews(): Promise<NewsData>` - Get news count
+- `getNews(): Promise<number>` - Get news count
 - `updateOracle(params?: UpdateParams): Promise<string>` - Trigger oracle update (returns tx hash)
+- `waitForFinalization(txHash: string): Promise<any>` - Wait for transaction to finalize
 - `onUpdate(callback: (data: OracleStatus) => void): void` - Subscribe to updates
 - `offUpdate(callback: Function): void` - Unsubscribe from updates
+- `destroy(): void` - Cleanup (stop polling)
+
+### SimplePriceFeedSDK
+
+SDK for Simple Price Feed contracts (price-only oracle).
+
+#### Methods
+
+- `getPrice(): Promise<SimplePriceData>` - Get current price
+- `getPriceNumber(): Promise<number>` - Get price as number
+- `updatePrice(): Promise<string>` - Trigger price update (returns tx hash)
+- `updatePriceAndWait(): Promise<SimplePriceData>` - Update and wait for finalization
+- `waitForFinalization(txHash: string): Promise<any>` - Wait for transaction
+- `onUpdate(callback: (data: SimplePriceData) => void): void` - Subscribe to updates
+- `offUpdate(callback: Function): void` - Unsubscribe
+- `destroy(): void` - Cleanup
 
 ### OracleStatus
 
@@ -140,22 +197,23 @@ const receipt = await client.waitForTransactionReceipt({
 });
 ```
 
-### Multi-oracle Aggregation
+### Error Handling
 
 ```typescript
-import { MultiOracleSDK } from '@genlayer/oracle-sdk';
-
-const multiOracle = new MultiOracleSDK({
-  oracles: [
-    { address: '0x...', chain: studionet },
-    { address: '0x...', chain: studionet },
-  ],
-  client: client
-});
-
-// Get average price from all oracles
-const avgPrice = await multiOracle.getAveragePrice('ETH');
+try {
+  const status = await oracle.getStatus();
+} catch (error) {
+  console.error('Failed to get status:', error.message);
+  // Handle error (contract not deployed, network issue, etc.)
+}
 ```
+
+## Deployed Contracts
+
+The SDK is tested with these deployed contracts on studionet:
+
+- **Simple Price Feed**: `0xe328378CAF086ae0a6458395C9919a4137fCb888`
+- **Oracle Consumer**: `0xe0E45EC84BB780BB1cccAc1B0CB09E507eF37147`
 
 ## License
 

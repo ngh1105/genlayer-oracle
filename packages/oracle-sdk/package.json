@@ -7,14 +7,16 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "example": "tsx examples/basic-usage.ts"
   },
   "dependencies": {
     "genlayer-js": "^0.18.2"
   },
   "devDependencies": {
     "@types/node": "^22.5.5",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "tsx": "^4.7.0"
   },
   "peerDependencies": {
     "genlayer-js": "^0.18.2"

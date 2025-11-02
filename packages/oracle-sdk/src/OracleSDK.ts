@@ -3,7 +3,11 @@
  * 
  * TypeScript SDK for interacting with GenLayer oracle contracts
  */
-import { GenLayerClient, GenLayerChain, Address } from 'genlayer-js';
+
+// Types from genlayer-js (not exported, using any for now)
+export type GenLayerClient<T = any> = any;
+export type GenLayerChain = any;
+export type Address = string;
 
 export interface OracleStatus {
   price: {
@@ -93,8 +97,14 @@ export class OracleSDK {
    */
   async updateOracle(params?: UpdateParams): Promise<string> {
     try {
+      // Get account from client (may need to be passed separately)
+      const account = (this.client as any).account;
+      if (!account) {
+        throw new Error('Client account not available. Please ensure client is created with account.');
+      }
+
       const txHash = await this.client.writeContract({
-        account: this.client.account,
+        account,
         address: this.contractAddress,
         functionName: 'update_all',
         args: [
@@ -110,6 +120,16 @@ export class OracleSDK {
     } catch (error: any) {
       throw new Error(`Failed to update oracle: ${error.message}`);
     }
+  }
+
+  /**
+   * Wait for transaction to finalize
+   */
+  async waitForFinalization(txHash: string): Promise<any> {
+    return await this.client.waitForTransactionReceipt({
+      hash: txHash,
+      status: 'finalized',
+    });
   }
 
   /**
