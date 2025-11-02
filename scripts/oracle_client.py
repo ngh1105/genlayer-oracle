@@ -26,6 +26,16 @@ Examples:
 import sys
 from typing import Optional
 
+# ============================================================================
+# GenLayer Python SDK Imports
+# ============================================================================
+# Note: This script uses genlayer-py (off-chain SDK)
+#       Contracts use genlayer.gl (on-chain runtime)
+#
+# genlayer-py: For interacting with contracts from off-chain Python scripts
+# genlayer.gl: For writing contracts that run on GenVM (on-chain)
+# ============================================================================
+
 try:
     from genlayer_py import create_client, create_account
 except ImportError:
