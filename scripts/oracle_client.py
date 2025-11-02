@@ -38,6 +38,7 @@ from typing import Optional
 
 try:
     from genlayer_py import create_client, create_account
+    from genlayer_py.types import TransactionStatus
 except ImportError:
     print("❌ Error: genlayer-py not installed")
     print("   Install with: pip install genlayer-py")
@@ -106,13 +107,14 @@ def read_oracle_consumer(client, address: str) -> None:
         return None
 
 
-def update_simple_price_feed(client, address: str) -> None:
+def update_simple_price_feed(client, account, address: str) -> None:
     """Update Simple Price Feed contract."""
     print("\n--- Updating Simple Price Feed ---")
     
     try:
         print("Sending update_price transaction...")
         tx_hash = client.write_contract(
+            account=account,
             address=address,
             function_name="update_price",
             args=[],
@@ -123,8 +125,9 @@ def update_simple_price_feed(client, address: str) -> None:
         print("Waiting for finalization...")
         
         receipt = client.wait_for_transaction_receipt(
-            transaction_hash=tx_hash,
-            status="FINALIZED",
+            hash=tx_hash,
+            status=TransactionStatus.FINALIZED,
+            full_transaction=False,
         )
         
         print(f"✅ Transaction finalized!")
@@ -135,15 +138,18 @@ def update_simple_price_feed(client, address: str) -> None:
         
     except Exception as e:
         print(f"❌ Error updating contract: {e}")
+        import traceback
+        traceback.print_exc()
 
 
-def update_oracle_consumer(client, address: str) -> None:
+def update_oracle_consumer(client, account, address: str) -> None:
     """Update Oracle Consumer contract."""
     print("\n--- Updating Oracle Consumer ---")
     
     try:
         print("Sending update_all transaction...")
         tx_hash = client.write_contract(
+            account=account,
             address=address,
             function_name="update_all",
             args=["Hanoi", "21.0245", "105.8412", 3],
@@ -154,8 +160,9 @@ def update_oracle_consumer(client, address: str) -> None:
         print("Waiting for finalization...")
         
         receipt = client.wait_for_transaction_receipt(
-            transaction_hash=tx_hash,
-            status="FINALIZED",
+            hash=tx_hash,
+            status=TransactionStatus.FINALIZED,
+            full_transaction=False,
         )
         
         print(f"✅ Transaction finalized!")
@@ -166,6 +173,8 @@ def update_oracle_consumer(client, address: str) -> None:
         
     except Exception as e:
         print(f"❌ Error updating contract: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 def detect_contract_type(client, address: str) -> Optional[str]:
@@ -202,7 +211,8 @@ def main():
     
     # Create account and client
     account = create_account()
-    client = create_client(chain=CHAIN, account=account)
+    # Note: According to genlayer-py docs, account is passed to write_contract, not create_client
+    client = create_client(chain=CHAIN)
     
     print("\n=== GenLayer Oracle Client (Python) ===")
     print(f"Chain: {CHAIN.name if hasattr(CHAIN, 'name') else 'Unknown'}")
@@ -228,9 +238,9 @@ def main():
                 read_simple_price_feed(client, contract_address)
         elif action == "update":
             if contract_type == "oracle":
-                update_oracle_consumer(client, contract_address)
+                update_oracle_consumer(client, account, contract_address)
             elif contract_type == "simple":
-                update_simple_price_feed(client, contract_address)
+                update_simple_price_feed(client, account, contract_address)
         else:
             print(f"❌ Unknown action: {action}")
             print("   Available actions: read, update")
