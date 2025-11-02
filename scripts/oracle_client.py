@@ -5,6 +5,9 @@ GenLayer Oracle Client - Python
 Off-chain Python script to interact with GenLayer oracle contracts.
 Similar to src/index.ts but using genlayer-py SDK.
 
+IMPORTANT: Requires Python >=3.12 (genlayer-py SDK requirement)
+If using Python <3.12, use TypeScript client instead: npm run dev
+
 Usage:
     python scripts/oracle_client.py [contract_address] [action]
 
@@ -39,9 +42,12 @@ from typing import Optional
 try:
     from genlayer_py import create_client, create_account
     from genlayer_py.types import TransactionStatus
-except ImportError:
-    print("❌ Error: genlayer-py not installed")
+except ImportError as e:
+    print("ERROR: genlayer-py not installed or incompatible")
     print("   Install with: pip install genlayer-py")
+    print("   Note: genlayer-py requires Python >= 3.12")
+    print(f"   Current Python: {sys.version}")
+    print(f"   Import error: {e}")
     sys.exit(1)
 
 # Try to import studionet, fallback to localnet if not available
@@ -52,10 +58,10 @@ except ImportError:
     try:
         from genlayer_py.chains import localnet
         CHAIN = localnet
-        print("⚠️  Warning: studionet not found, using localnet")
+        print("WARNING: studionet not found, using localnet")
         print("   If you need studionet, check genlayer-py version or create custom config")
     except ImportError:
-        print("❌ Error: Could not import chain configuration")
+        print("ERROR: Could not import chain configuration")
         sys.exit(1)
 
 
@@ -74,7 +80,7 @@ def read_simple_price_feed(client, address: str) -> None:
         print(f"Source: {result.get('source', 'N/A')}")
         return result
     except Exception as e:
-        print(f"❌ Error reading contract: {e}")
+        print(f"ERROR: Error reading contract: {e}")
         print("\nNote: Make sure the contract is deployed and address is correct.")
         return None
 
@@ -102,7 +108,7 @@ def read_oracle_consumer(client, address: str) -> None:
         
         return status
     except Exception as e:
-        print(f"❌ Error reading contract: {e}")
+        print(f"ERROR: Error reading contract: {e}")
         print("\nNote: Make sure the contract is deployed and address is correct.")
         return None
 
@@ -121,7 +127,7 @@ def update_simple_price_feed(client, account, address: str) -> None:
             value=0,
         )
         
-        print(f"✅ Transaction sent: {tx_hash}")
+        print(f"SUCCESS: Transaction sent: {tx_hash}")
         print("Waiting for finalization...")
         
         receipt = client.wait_for_transaction_receipt(
@@ -130,14 +136,14 @@ def update_simple_price_feed(client, account, address: str) -> None:
             full_transaction=False,
         )
         
-        print(f"✅ Transaction finalized!")
+        print(f"SUCCESS: Transaction finalized!")
         
         # Read updated price
         print("\nReading updated price...")
         read_simple_price_feed(client, address)
         
     except Exception as e:
-        print(f"❌ Error updating contract: {e}")
+        print(f"ERROR: Error updating contract: {e}")
         import traceback
         traceback.print_exc()
 
@@ -156,7 +162,7 @@ def update_oracle_consumer(client, account, address: str) -> None:
             value=0,
         )
         
-        print(f"✅ Transaction sent: {tx_hash}")
+        print(f"SUCCESS: Transaction sent: {tx_hash}")
         print("Waiting for finalization...")
         
         receipt = client.wait_for_transaction_receipt(
@@ -165,14 +171,14 @@ def update_oracle_consumer(client, account, address: str) -> None:
             full_transaction=False,
         )
         
-        print(f"✅ Transaction finalized!")
+        print(f"SUCCESS: Transaction finalized!")
         
         # Read updated status
         print("\nReading updated status...")
         read_oracle_consumer(client, address)
         
     except Exception as e:
-        print(f"❌ Error updating contract: {e}")
+        print(f"ERROR: Error updating contract: {e}")
         import traceback
         traceback.print_exc()
 
@@ -226,7 +232,7 @@ def main():
         contract_type = detect_contract_type(client, contract_address)
         
         if contract_type is None:
-            print("❌ Could not detect contract type.")
+            print("ERROR: Could not detect contract type.")
             print("   Make sure the contract address is correct and contract is deployed.")
             return
         
@@ -242,7 +248,7 @@ def main():
             elif contract_type == "simple":
                 update_simple_price_feed(client, account, contract_address)
         else:
-            print(f"❌ Unknown action: {action}")
+            print(f"ERROR: Unknown action: {action}")
             print("   Available actions: read, update")
     else:
         print("\n--- Usage ---")
@@ -267,7 +273,7 @@ if __name__ == "__main__":
         print("\n\nInterrupted by user")
         sys.exit(0)
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\nERROR: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

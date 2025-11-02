@@ -56,8 +56,11 @@ genlayer-oracle/
 
 ### Prerequisites
 - Node.js 18+
-- Python 3.9+ (for GenVM contract development and scripts)
+- Python 3.9+ (for GenVM contract development)
+- Python 3.12+ (required for genlayer-py SDK and Python client scripts)
 - GenLayer runtime/network access
+
+**Note**: The Python client script (`scripts/oracle_client.py`) requires Python 3.12+ due to genlayer-py SDK dependencies. For Python <3.12, use the TypeScript client (`src/index.ts`) instead.
 
 ### Installation
 
